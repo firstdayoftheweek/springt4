@@ -1,9 +1,39 @@
 const loginForm = document.querySelector("#login-form");
 const registerForm = document.querySelector("#register-form");
-const userInfoTags = document.querySelectorAll(".card-body>[data-userinfo]")
+const userInfoTags = document.querySelectorAll(".card-body>[data-userinfo]");
+const navbarBtns = document.querySelectorAll(".navbar-nav>.btn");
+const logoutBtn = document.querySelector(".navbar-nav>.btn-logout");
+
 
 loginForm.addEventListener("submit", (e) => loginUser(e, loginForm))
 registerForm.addEventListener("submit", (e) => registerUser(e, registerForm))
+logoutBtn.addEventListener("click", userLogout)
+displayActiveUser()
+
+
+function switchBtnsNavbar() {
+    navbarBtns.forEach(eachBtn => {
+        eachBtn.classList.toggle("d-none")
+    })
+}
+
+function saveCurrentUser(currentUserData) {
+    let currentUser = JSON.stringify(currentUserData)
+    localStorage.setItem("currentUser", currentUser)
+}
+
+function displayActiveUser() {
+    let lastActiveUser = JSON.parse(localStorage.getItem("currentUser"))
+    if (lastActiveUser) {
+        displayDataPage(userInfoTags, lastActiveUser)
+    }
+}
+
+function userLogout() {
+    switchBtnsNavbar()
+    localStorage.removeItem("currentUser")
+    location.reload()
+}
 
 
 function loginUser(defaultE, loginFormData) {
@@ -42,6 +72,8 @@ function displayDataPage(userInfoTags, currentUserData) {
             }
             eachTag.classList.toggle("d-none")
         })
+        saveCurrentUser(currentUserData)
+        switchBtnsNavbar()
     }
 }
 
